@@ -25,6 +25,10 @@ public:
     const QList<Vehicle> &vehicleData() const;
     void setVehicleData(const QList<Vehicle> &vehicleData);
 
+signals:
+    void vehicleRowDeleted(unsigned currRow);
+    void vehicleRowAdded(const QList<Vehicle> &vehicleData);
+
 private slots:
     void onNewButtonClicked();
     void onDeleteButtonClicked();

@@ -14,6 +14,8 @@
 #include "VehicleTab.h"
 #include "Route.h"
 #include "RouteTab.h"
+#include "Schedule.h"
+#include "ScheduleTab.h"
 
 #include "ui_TransportSystemDlg.h"
 
@@ -39,18 +41,20 @@ private:
 
     void initVehicles();
     void initRoutes();
+    void initSchedules();
 
     void saveFileVehicles();
     void saveFileRoutes();
-
+    void saveFileSchedules();
 
 private:
     QList<Vehicle> mVehicles;
     QList<Route> mRoutes;
+    QList<Schedule> mSchedules;
 
     VehicleTab *mVehicleTab;
     RouteTab *mRouteTab;
-
+    ScheduleTab *mScheduleTab;
 };
 
 }   // namespace TransportSystemDlg

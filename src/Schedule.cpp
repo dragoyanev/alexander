@@ -10,33 +10,28 @@ namespace TransportSystemDlg {
 
 Schedule::Schedule()
 {
-    mId = 0;
-    mVechicleId = 0;
+    mVehicleId = 0;
     mRouteId = 0;
+}
+
+Schedule::Schedule(unsigned vehicleId, unsigned routeId)
+{
+    setVehicleId(vehicleId);
+    setRouteId(routeId);
 }
 
 Schedule::~Schedule()
 {
 }
 
-unsigned Schedule::id() const
+unsigned Schedule::vehicleId() const
 {
-    return mId;
+    return mVehicleId;
 }
 
-void Schedule::setId(unsigned id)
+void Schedule::setVehicleId(unsigned vehicleId)
 {
-    mId = id;
-}
-
-unsigned Schedule::vechicleId() const
-{
-    return mVechicleId;
-}
-
-void Schedule::setVechicleId(unsigned vechicleId)
-{
-    mVechicleId = vechicleId;
+    mVehicleId = vehicleId;
 }
 
 unsigned Schedule::routeId() const
@@ -47,6 +42,14 @@ unsigned Schedule::routeId() const
 void Schedule::setRouteId(unsigned routeId)
 {
     mRouteId = routeId;
+}
+
+QDebug operator<<(QDebug debug, const Schedule &schedule) {
+    QString str;
+    str += QString("%1 ").arg(schedule.vehicleId());
+    str += QString("%1 ").arg(schedule.routeId());
+    debug << str;
+    return debug;
 }
 
 }   // namespace TransportSystemDlg

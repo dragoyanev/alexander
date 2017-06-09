@@ -39,7 +39,7 @@ RouteTab::RouteTab(QWidget *parent) :
 
     // Table widget
     mRouteTableWidget->setColumnCount(3);
-    mRouteTableWidget->setHorizontalHeaderItem(0, new QTableWidgetItem(QString("Points")));
+    mRouteTableWidget->setHorizontalHeaderItem(0, new QTableWidgetItem(QString("Route")));
     mRouteTableWidget->setHorizontalHeaderItem(1, new QTableWidgetItem(QString("Distance")));
     mRouteTableWidget->setHorizontalHeaderItem(2, new QTableWidgetItem(QString("Daily Repeats")));
 
@@ -75,6 +75,8 @@ void RouteTab::onNewButtonClicked()
     mRouteTableWidget->setItem(row, 1, col1);
     QTableWidgetItem *col2 = new QTableWidgetItem(QString("%1").arg(mRouteData.at(row).dailyRepeats()));
     mRouteTableWidget->setItem(row, 2, col2);
+
+    emit routeRowAdded(mRouteData);
 }
 
 void RouteTab::onDeleteButtonClicked()
@@ -85,6 +87,8 @@ void RouteTab::onDeleteButtonClicked()
         QMessageBox::information(this, "Routes", "No selected row to delete!");
         return;
     }
+
+    emit routeRowDeleted(currRow);
 
     mRouteTableWidget->removeRow(currRow);
     mRouteTableWidget->selectRow(mRouteTableWidget->currentRow());

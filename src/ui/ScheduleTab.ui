@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ScheduleTab</class>
+ <widget class="QWidget" name="ScheduleTab">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>425</width>
+    <height>287</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Schedules</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="3">
+    <widget class="QComboBox" name="mRouteIdCombo"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="mIdLabel">
+     <property name="text">
+      <string>ID</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QPushButton" name="mDelScheduleBtn">
+     <property name="text">
+      <string>Delete Schedule</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="0">
+    <widget class="QPushButton" name="mNewScheduleBtn">
+     <property name="text">
+      <string>New Schedule</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="6">
+    <widget class="QTableWidget" name="mScheduleTableWidget"/>
+   </item>
+   <item row="1" column="3">
+    <widget class="QLabel" name="mRouteIdLabel">
+     <property name="text">
+      <string>Route</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="2">
+    <widget class="QComboBox" name="mVehicleIdCombo"/>
+   </item>
+   <item row="1" column="1" colspan="2">
+    <widget class="QLabel" name="mVehicleIdLabel">
+     <property name="text">
+      <string>Vehicle</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QSpinBox" name="mIdSb"/>
+   </item>
+   <item row="1" column="4">
+    <widget class="QLabel" name="mDailyFuelLabel">
+     <property name="text">
+      <string>Daily Fuel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+    <widget class="QSpinBox" name="mDailyFuelSb">
+     <property name="suffix">
+      <string/>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -96,6 +96,8 @@ void VehicleTab::onNewButtonClicked()
     mVehicleTableWidget->setItem(row, 4, col4);
     QTableWidgetItem *col5 = new QTableWidgetItem(QString("%1").arg(mVehicleData.at(row).fuelConsumption()));
     mVehicleTableWidget->setItem(row, 5, col5);
+
+    emit vehicleRowAdded(mVehicleData);
 }
 
 void VehicleTab::onDeleteButtonClicked()
@@ -106,6 +108,8 @@ void VehicleTab::onDeleteButtonClicked()
         QMessageBox::information(this, "Vehicles", "No selected row to delete!");
         return;
     }
+
+    emit vehicleRowDeleted(currRow);
 
     mVehicleTableWidget->removeRow(currRow);
     mVehicleTableWidget->selectRow(mVehicleTableWidget->currentRow());

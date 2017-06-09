@@ -23,9 +23,11 @@ TransportSystemDlg::TransportSystemDlg(QWidget *parent)
     // Init object structure
     mVehicles.clear();
     mRoutes.clear();
+    mSchedules.clear();
 
     initVehicles();
     initRoutes();
+    initSchedules();
 //---------------------------------------
 //---------------------------------------
 
@@ -45,12 +47,16 @@ void TransportSystemDlg::printDebugLog()
 
     mRoutes = mRouteTab->routeData();
     qDebug("route size = %d",mRoutes.size());
+
+    mSchedules = mScheduleTab->scheduleData();
+    qDebug("schedule size = %d",mSchedules.size());
 }
 
 void TransportSystemDlg::saveFiles()
 {
     saveFileVehicles();
     saveFileRoutes();
+    saveFileSchedules();
 }
 
 void TransportSystemDlg::buildUI()
@@ -64,6 +70,13 @@ void TransportSystemDlg::buildUI()
     mRouteTab = new RouteTab();
     mRouteTab->setRouteData(mRoutes);
     mTabWidget->addTab(mRouteTab, "Routes");
+
+    qDebug("mSchedule.size=%d",mSchedules.size());
+    mScheduleTab = new ScheduleTab();
+    mScheduleTab->setVehicleData(mVehicles);
+    mScheduleTab->setRouteData(mRoutes);
+    mScheduleTab->setScheduleData(mSchedules);
+    mTabWidget->addTab(mScheduleTab, "Schedule");
 }
 
 void TransportSystemDlg::connections()
@@ -71,6 +84,12 @@ void TransportSystemDlg::connections()
     connect(mCloseBtn, SIGNAL(clicked()), this, SLOT(printDebugLog()));
     connect(mCloseBtn, SIGNAL(clicked()), this, SLOT(saveFiles()));
     connect(mCloseBtn, SIGNAL(clicked()), this, SLOT(close()));
+
+    connect(mVehicleTab, SIGNAL(vehicleRowDeleted(unsigned)), mScheduleTab, SLOT(onVehicleRowDeleted(unsigned)));
+    connect(mVehicleTab, SIGNAL(vehicleRowAdded(QList<Vehicle>)), mScheduleTab, SLOT(onVehicleRowAdded(QList<Vehicle>)));
+
+    connect(mRouteTab, SIGNAL(routeRowDeleted(unsigned)), mScheduleTab, SLOT(onRouteRowDeleted(unsigned)));
+    connect(mRouteTab, SIGNAL(routeRowAdded(QList<Route>)), mScheduleTab, SLOT(onRouteRowAdded(QList<Route>)));
 }
 
 void TransportSystemDlg::initVehicles()
@@ -195,6 +214,66 @@ void TransportSystemDlg::initRoutes()
     }
 }
 
+void TransportSystemDlg::initSchedules()
+{
+    bool scheduleFileFails = false;
+
+    QString filePath = QApplication::applicationDirPath() + "/../var/";
+    qDebug("filePath=%s",qPrintable(filePath));
+
+    QDir tmpDir(filePath);
+    if (!tmpDir.exists()) {
+        qDebug("filePath NOT exists");
+        if (!tmpDir.mkpath(filePath)) {
+            qDebug("filePath -> can't create dir '%s'\n", qPrintable(filePath));
+            scheduleFileFails = true;
+        }
+    }
+
+    QString fileName = "schedules.csv";
+    if (scheduleFileFails == false) {
+
+        QStringList filters;
+        filters << fileName;
+
+        QStringList existingFile = tmpDir.entryList(filters, QDir::Files, QDir::Name);
+
+        if (existingFile.empty()) {
+            qDebug("existingFile empty");
+            QFileDialog fileDialog;
+
+            fileDialog.setNameFilter("(*.csv)");
+
+            if (fileDialog.exec()) {
+                qDebug("Selected file: %s",qPrintable(fileDialog.selectedFiles()[0]));
+                fileName = fileDialog.selectedFiles()[0];
+            } else
+                scheduleFileFails = true;
+        } else {
+            qDebug("existingFile NOT empty");
+            foreach (QString fileName, existingFile)
+                qDebug("%s", qPrintable(fileName));
+            fileName = filePath + fileName;
+        }
+    }
+
+    if (scheduleFileFails == false) {
+        qDebug("OPEN schedules.csv");
+        FileReader fileReader(fileName, ",", "\n", "|", false);
+        fileReader.readFileData();
+
+        qDebug("fileReader.rowCount()=%d",fileReader.rowCount());
+        for (int row = 0; row < fileReader.rowCount(); row++) {
+            QStringList rowData = fileReader.readRow(row);
+            if (rowData.size() == 2) {
+                mSchedules.append(Schedule(rowData.at(0).toUInt(), rowData.at(1).toUInt()));
+                qDebug()<<(mSchedules.last());
+            } else
+                qDebug("Error rowData.size() %d <> 2",rowData.size());
+        }
+    }
+}
+
 void TransportSystemDlg::saveFileVehicles()
 {
     mVehicles = mVehicleTab->vehicleData();
@@ -262,6 +341,36 @@ void TransportSystemDlg::saveFileRoutes()
     }
 }
 
+void TransportSystemDlg::saveFileSchedules()
+{
+    mSchedules = mScheduleTab->scheduleData();
+
+    bool scheduleFileFails = false;
+
+    QString filePath = QApplication::applicationDirPath() + "/../var/";
+    QDir tmpDir(filePath);
+    if (!tmpDir.exists()) {
+        if (!tmpDir.mkpath(filePath)) {
+            qDebug("filePath -> can't create dir '%s'\n", qPrintable(filePath));
+            scheduleFileFails = true;
+        }
+    }
+
+    QString fileName = filePath + "schedules.csv";
+    if (scheduleFileFails)
+        QMessageBox::critical(this, "Schedules", "Can't create directory %s!",qPrintable(filePath));
+    else {
+        FileWriter fileWriter(fileName);
+
+        for (int row = 0; row < mSchedules.size(); row++) {
+            QStringList rowData;
+            rowData.append(QString("%1").arg(mSchedules.at(row).vehicleId()));
+            rowData.append(QString("%1").arg(mSchedules.at(row).routeId()));
+
+            fileWriter.addRow(rowData);
+        }
+    }
+}
 
 }   // namespace TransportSystemDlg
 

@@ -1,5 +1,5 @@
 //
-// Route.h
+// RouteTab.h
 //
 // Copyright (C) 2017
 //
@@ -24,6 +24,10 @@ public:
 
     const QList<Route> &routeData() const;
     void setRouteData(const QList<Route> &routeData);
+
+signals:
+    void routeRowDeleted(unsigned currRow);
+    void routeRowAdded(const QList<Route> &routeData);
 
 private slots:
     void onNewButtonClicked();
