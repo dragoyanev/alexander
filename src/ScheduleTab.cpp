@@ -80,8 +80,6 @@ void ScheduleTab::setRouteData(const QList<Route> &routeData)
 
 void ScheduleTab::onVehicleRowDeleted(unsigned currRow)
 {
-    qDebug("11 onVehicleRowDeleted mScheduleData.size()=%d", mScheduleData.size());
-
     for (int i = 0; i < mScheduleData.size(); i++) {
         if (mScheduleData.at(i).vehicleId() == currRow) {
             mScheduleData.removeAt(i);
@@ -89,7 +87,6 @@ void ScheduleTab::onVehicleRowDeleted(unsigned currRow)
         }
     }
 
-    qDebug("22 onVehicleRowDeleted mScheduleData.size()=%d", mScheduleData.size());
     for (int i = 0; i < mScheduleData.size(); i++) {
         if (mScheduleData.at(i).vehicleId() > currRow) {
             Schedule tmpSchedule;
@@ -140,15 +137,12 @@ void ScheduleTab::onRouteRowAdded(const QList<Route> &routeData)
 
 void ScheduleTab::onNewButtonClicked()
 {
-    qDebug("77 mScheduleTableWidget rows=%d", mScheduleTableWidget->rowCount());
     mScheduleTableWidget->insertRow(mScheduleTableWidget->rowCount());
-    qDebug("88 mScheduleTableWidget rows=%d", mScheduleTableWidget->rowCount());
 
     mScheduleData.append(Schedule(mVehicleIdCombo->itemData(mVehicleIdCombo->currentIndex()).toUInt(),
                                   mRouteIdCombo->itemData(mRouteIdCombo->currentIndex()).toUInt()));
 
     int row = mScheduleTableWidget->rowCount() - 1;
-    qDebug("mScheduleTableWidget rows=%d dataSize=%d", mScheduleTableWidget->rowCount(), mScheduleData.size());
 
     QTableWidgetItem *col0 = new QTableWidgetItem(QString("%1").arg(mVehicleData.at(mScheduleData.at(row).vehicleId()).brand() +
                                                                     " " +
@@ -161,8 +155,6 @@ void ScheduleTab::onNewButtonClicked()
                    mRouteData.at(mScheduleData.at(row).routeId()).dailyRepeats()) / 100.0;
     QTableWidgetItem *col2 = new QTableWidgetItem(QString("%1").arg(fuel));
     mScheduleTableWidget->setItem(row, 2, col2);
-
-    qDebug("mScheduleTableWidget rows=%d", mScheduleTableWidget->rowCount());
 
     updateTable();
 }
