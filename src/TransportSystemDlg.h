@@ -12,6 +12,8 @@
 
 #include "Vehicle.h"
 #include "VehicleTab.h"
+#include "Route.h"
+#include "RouteTab.h"
 
 #include "ui_TransportSystemDlg.h"
 
@@ -35,11 +37,19 @@ private:
 
     void connections();
 
+    void initVehicles();
+    void initRoutes();
+
+    void saveFileVehicles();
+    void saveFileRoutes();
+
 
 private:
     QList<Vehicle> mVehicles;
+    QList<Route> mRoutes;
 
     VehicleTab *mVehicleTab;
+    RouteTab *mRouteTab;
 
 };
 

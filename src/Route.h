@@ -8,24 +8,26 @@
 #define TRANSPORTSYSTEMGUI_ROUTE_H
 
 #include <QString>
-#include <QList>
+#include <QDebug>
 
 namespace TransportSystemDlg {
 
 class Route
 {
 public:
+    static const unsigned MAX_ROUTE_DISTANCE;
+    static const unsigned MAX_ROUTE_DAILY_REPEATS;
+
+    static const QString ROUTE_REGULAR_EXPRESSION_VALID;
+    static const QString ROUTE_REGULAR_EXPRESSION_INVALID;
+
+public:
     Route();
+    Route(const QString &points, unsigned distance, unsigned dailyRepeats);
     ~Route();
 
-    unsigned id() const;
-    void setId(unsigned id);
-
-    const QList<QString> &points() const;
-    void setPoints(const QList<QString> &points);
-
-//    QString point(unsigned num) const;
-//    void setPoint(unsigned num, QString point);
+    const QString &points() const;
+    void setPoints(const QString &points);
 
     unsigned distance() const;
     void setDistance(unsigned distance);
@@ -34,11 +36,18 @@ public:
     void setDailyRepeats(unsigned dailyRepeats);
 
 private:
+    bool pointsValid(const QString &points);
+    bool distanceValid(unsigned distance);
+    bool dailyRepeatsValid(unsigned dailyRepeats);
+
+private:
     unsigned mId;
-    QList<QString> mPoints;
+    QString mPoints;
     unsigned mDistance;
     unsigned mDailyRepeats;
 };
+
+QDebug operator<<(QDebug debug, const Route &route);
 
 }   // namespace TransportSystemDlg
 
